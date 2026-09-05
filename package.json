@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/HBMGuard/landing-page#readme",
   "dependencies": {
-    "next": "^16.2.9",
+    "next": "^15.5.7",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
