@@ -4,13 +4,13 @@ import { useState } from "react"
 
 export function ContactForm() {
   const [submitting, setSubmitting] = useState(false)
-  const [btnText, setBtnText] = useState("Request Pilot Access →")
+  const [btnText, setBtnText] = useState("Request HBMGuard Pilot →")
   const [status, setStatus] = useState<{ message: string; color: string } | null>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const form = e.currentTarget
-    const originalBtnText = "Request Pilot Access →"
+    const originalBtnText = "Request HBMGuard Pilot →"
     setSubmitting(true)
     setBtnText("Sending...")
     setStatus(null)
@@ -71,7 +71,7 @@ export function ContactForm() {
         >
           {btnText}
         </button>
-        <p className="form-note">No sales deck. No NDAs on first contact. Just a technical conversation.</p>
+        <p className="form-note">Private deployment. Evidence-gated optimization. Just a technical conversation.</p>
       </form>
       <div id="form-status" style={status ? { display: "block", color: status.color } : undefined}>
         {status?.message}

@@ -1,362 +1,47 @@
 import { ContactForm } from "./contact-form"
 
+const environments = ["NVIDIA GPUs", "vLLM", "NVIDIA NIM", "TensorRT-LLM", "Triton", "Ray", "Kubernetes", "Slurm"]
+const gpuMetrics = ["GPU energy consumption", "GPU utilization", "HBM activity", "Memory-bound behavior", "Performance per watt", "GPU time per workload", "Thermal behavior", "Workload SLA impact"]
+const agentMetrics = ["Input tokens", "Output tokens", "Context growth", "Repeated context", "Agent steps", "Tool calls", "Retries", "Cache usage", "Model usage", "Latency", "Task success rate"]
+
 export default function Page() {
-  return (
-    <>
-      {/* NAV */}
-      <nav>
-        <div className="nav-inner">
-          <a className="logo" href="#">
-            HBMGuard<span>_</span>
-          </a>
-          <div className="nav-links">
-            <a className="nav-link" href="#problem">
-              Problem
-            </a>
-            <a className="nav-link" href="#how">
-              How it works
-            </a>
-            <a className="nav-link" href="#arch">
-              Architecture
-            </a>
-            <a className="btn-nav" href="#contact">
-              Request Pilot
-            </a>
-          </div>
-        </div>
-      </nav>
+  return <>
+    <nav><div className="nav-inner"><a className="logo" href="#hero">BZICHIMEM<span>_</span></a><div className="nav-links"><a className="nav-link" href="#hbmguard">HBMGuard</a><a className="nav-link" href="#agent">Agent Efficiency</a><a className="nav-link" href="#arch">Architecture</a><a className="btn-nav" href="#contact">Request Pilot</a></div></div></nav>
 
-      {/* HERO */}
-      <section id="hero">
-        <div className="container">
-          <p className="eyebrow">Runtime GPU Telemetry · Closed-Loop Power Management</p>
-          <h1>
-            <span className="strike">Wake up an engineer.</span>
-            <br />
-            Let the cluster <em>heal itself.</em>
-          </h1>
-          <p className="hero-sub">
-            HBMGuard is a bare-metal C++ agent that detects GPU thermal throttling in real-time, cuts power draw by
-            hundreds of watts, and automatically drains &amp; restores Slurm nodes — without touching your application
-            code.
-          </p>
-          <div className="hero-ctas">
-            <a className="btn-primary" href="#contact">
-              Request a Pilot
-            </a>
-            <a className="btn-secondary" href="#how">
-              See how it works
-            </a>
-          </div>
+    <main>
+      <section id="hero"><div className="container">
+        <p className="eyebrow">AI Infrastructure Efficiency</p>
+        <h1><span className="strike">Optimize the prompt.</span><br /><span className="hero-brand">HBMGuard</span></h1>
+        <h2 className="hero-headline">Optimize GPU Efficiency First.<br />Then Reduce Agent Token Waste.</h2>
+        <p className="hero-sub">BZICHIMEM helps private AI and GPU infrastructure operators reduce physical GPU energy waste, improve HBM-aware workload efficiency, and identify unnecessary token consumption across AI agent workflows.</p>
+        <div className="hero-ctas"><a className="btn-primary" href="#contact">Request an HBMGuard Pilot</a><a className="btn-secondary" href="#agent">Explore Agent Efficiency</a></div>
+        <div className="stack-line"><span>GPU / HBM / Power</span><b>↑</b><strong>HBMGuard</strong><b>↑</b><span>Model / KV Cache</span><b>↑</b><span>Agent / Context / Tokens</span></div>
+        <p className="hero-note">Built for private, on-prem and security-sensitive AI environments.</p>
+        <div className="terminal-strip"><div className="terminal-bar"><div className="dot dot-r" /><div className="dot dot-y" /><div className="dot dot-g" /><span className="term-title">hbmguard_agent · node-a100-01 · live</span></div><div className="terminal-body"><div><span className="t-dim">[2026-06-18 08:41:03]</span> <span className="t-white">HBMGuard v0.9 — DCGM Profiling API connected</span></div><div><span className="t-dim">[08:41:05]</span> <span className="t-white">SM_CLOCK: 1410 MHz DRAM_ACTIVE: 94% PWR: 398W</span> <span className="t-amber">⚠ Memory Wall detected</span></div><div><span className="t-dim">[08:41:05]</span> <span className="t-red">ECO_CTRL: applying workload-aware power policy</span></div><div><span className="t-dim">[08:41:14]</span> <span className="t-amber">HBM telemetry: threshold crossed → controlled response</span></div><div><span className="t-dim">[08:42:31]</span> <span className="t-green">✓ Node healthy. Workload restored. Engineers paged: 0.</span> <span className="blink t-dim">█</span></div></div></div>
+      </div></section>
 
-          {/* Terminal */}
-          <div className="terminal-strip">
-            <div className="terminal-bar">
-              <div className="dot dot-r" />
-              <div className="dot dot-y" />
-              <div className="dot dot-g" />
-              <span className="term-title">hbmguard_agent · node-a100-01 · live</span>
-            </div>
-            <div className="terminal-body">
-              <div>
-                <span className="t-dim">[2026-06-18 08:41:03]</span>{" "}
-                <span className="t-white">HBMGuard v0.9 — DCGM Profiling API connected</span>
-              </div>
-              <div>
-                <span className="t-dim">[08:41:05]</span>{" "}
-                <span className="t-white">SM_CLOCK: 1410 MHz  DRAM_ACTIVE: 94%  PWR: 398W</span>{" "}
-                <span className="t-amber">⚠ Memory Wall detected</span>
-              </div>
-              <div>
-                <span className="t-dim">[08:41:05]</span>{" "}
-                <span className="t-red">ECO_CTRL: cutting power limit → 150W</span>
-              </div>
-              <div>
-                <span className="t-dim">[08:41:08]</span>{" "}
-                <span className="t-amber">SM_CLOCK degraded (sample 1/3): 812 MHz</span>
-              </div>
-              <div>
-                <span className="t-dim">[08:41:11]</span>{" "}
-                <span className="t-amber">SM_CLOCK degraded (sample 2/3): 798 MHz</span>
-              </div>
-              <div>
-                <span className="t-dim">[08:41:14]</span>{" "}
-                <span className="t-amber">SM_CLOCK degraded (sample 3/3): 805 MHz  → threshold crossed</span>
-              </div>
-              <div>
-                <span className="t-dim">[08:41:14]</span>{" "}
-                <span className="t-red">
-                  SLURM: scontrol update node=a100-01 state=drain reason=&quot;HBMGuard:thermal_wall&quot;
-                </span>
-              </div>
-              <div>
-                <span className="t-dim">[08:42:31]</span>{" "}
-                <span className="t-green">SM_CLOCK recovered (sample 3/3): 1395 MHz  → healthy</span>
-              </div>
-              <div>
-                <span className="t-dim">[08:42:31]</span>{" "}
-                <span className="t-green">SLURM: scontrol update node=a100-01 state=resume</span>
-              </div>
-              <div>
-                <span className="t-dim">[08:42:31]</span>{" "}
-                <span className="t-green">✓ Node back in pool. Elapsed: 88s. Engineers paged: 0.</span>{" "}
-                <span className="blink t-dim">█</span>
-              </div>
-            </div>
-          </div>
+      <section id="hbmguard"><div className="container"><p className="eyebrow">Primary capability · HBMGuard</p><h2>HBMGuard — GPU Infrastructure <em>Efficiency</em></h2><p className="section-lede">AI infrastructure efficiency begins below the model layer. HBMGuard observes and optimizes the physical behavior of GPU workloads using hardware telemetry, workload measurements and controlled GPU power policies.</p><div className="metric-layout"><div className="metric-list"><h3>HBMGuard focuses on</h3>{gpuMetrics.map((m) => <div className="metric-item" key={m}><span className="arch-dot" />{m}</div>)}</div><div className="kpi-card"><span className="kpi-label">Primary KPI</span><strong>Energy / Successful Workload <em>↓</em></strong><span className="kpi-label">Secondary KPI</span><strong>Performance per Watt <em>↑</em></strong></div></div></div></section>
 
-          {/* Stats */}
-          <div className="stats-row">
-            <div className="stat-cell">
-              <div className="stat-num">250W</div>
-              <div className="stat-label">
-                Typical power cut
-                <br />
-                during Memory Wall
-              </div>
-            </div>
-            <div className="stat-cell">
-              <div className="stat-num">&lt;15ms</div>
-              <div className="stat-label">
-                Control loop latency
-                <br />
-                C++ bare-metal
-              </div>
-            </div>
-            <div className="stat-cell">
-              <div className="stat-num">3-sample</div>
-              <div className="stat-label">
-                False-positive shield
-                <br />
-                before draining node
-              </div>
-            </div>
-            <div className="stat-cell">
-              <div className="stat-num">0</div>
-              <div className="stat-label">
-                Application code
-                <br />
-                changes required
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section id="evidence"><div className="container"><p className="eyebrow">Validated result · workload-specific</p><h2>Evidence-backed GPU <em>efficiency</em></h2><div className="evidence-grid"><div className="evidence-number"><strong>20.47%</strong><span>mean GPU-energy reduction</span><small>in replicated A100 KV-cache qualification</small></div><div className="evidence-number"><strong>&lt;1%</strong><span>throughput impact</span><small>measured within the qualification workload</small></div></div><p className="qualification">Results are workload-specific and must be independently qualified for each customer environment. No universal savings are implied.</p></div></section>
 
-      {/* PROBLEM */}
-      <section id="problem">
-        <div className="container">
-          <h2>
-            Thermal throttling is a <em>silent tax</em>
-            <br />
-            on your GPU compute
-          </h2>
-          <div className="problem-grid">
-            <div className="problem-card">
-              <span className="tag-red">VISIBILITY</span>
-              <h3>You&apos;re paying for full utilization</h3>
-              <p>
-                HBM thermal throttling degrades compute silently. Your dashboards show &quot;GPU busy&quot; while SM
-                Clock quietly drops 30–50%. The bill doesn&apos;t change. The throughput does.
-              </p>
-            </div>
-            <div className="problem-card">
-              <span className="tag-red">TOOLING</span>
-              <h3>NVML can&apos;t see what DCGM can</h3>
-              <p>
-                Standard monitoring tools (node_exporter, nvidia-smi) expose power and temperature. They miss the SM
-                occupancy vs. DRAM_ACTIVE dissonance that defines the Memory Wall — the actual throttle trigger.
-              </p>
-            </div>
-            <div className="problem-card">
-              <span className="tag-red">OPERATIONS</span>
-              <h3>Slurm doesn&apos;t know the node is struggling</h3>
-              <p>
-                Even with perfect local telemetry, a throttled node keeps receiving new jobs from the scheduler. The
-                thermal event compounds. Eventually a human gets paged — at 2am — to run{" "}
-                <code className="code-inline">scontrol drain</code>. HBMGuard closes this loop automatically, before the
-                page goes out.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section id="workflow"><div className="container"><h2>The control loop, <em>explained</em></h2><div className="flow-steps">{[["01","OBSERVE","Collect GPU telemetry, workload performance, HBM behavior and power measurements."],["02","DIAGNOSE","Identify inefficient operating regions, memory-bound behavior and workload/power mismatches."],["03","CONTROL","Apply workload-aware GPU operating policies within predefined safety and SLA constraints."],["04","VERIFY","Compare optimized execution against baseline and confirm SLA-safe restoration to baseline state."]].map(([n,t,p]) => <div className="flow-step" key={n}><div className="step-num">{n}</div><div className="step-body"><span className="step-tag">{t}</span><p>{p}</p></div></div>)}</div><div className="metric-ribbon"><span>GPU energy ↓</span><span>GPU time ↓</span><span>Performance per watt ↑</span><span>Throughput within SLA</span><span>Latency within SLA</span></div></div></section>
 
-      {/* HOW IT WORKS */}
-      <section id="how">
-        <div className="container">
-          <h2>
-            The control loop, <em>explained</em>
-          </h2>
-          <div className="flow-steps">
-            <div className="flow-step">
-              <div className="step-num">01</div>
-              <div className="step-body">
-                <span className="step-tag">DETECT</span>
-                <h3>Memory Wall detection via DCGM Profiling API</h3>
-                <p>
-                  The agent samples SM occupancy, DRAM_ACTIVE bandwidth, and power draw every ~2 seconds using
-                  DCGM&apos;s Profiling API — bypassing NVML&apos;s limitations. A Memory Wall condition is flagged when
-                  DRAM_ACTIVE is saturated while SM efficiency collapses, creating the characteristic power-vs-work
-                  dissonance.
-                </p>
-              </div>
-            </div>
-            <div className="flow-step">
-              <div className="step-num">02</div>
-              <div className="step-body">
-                <span className="step-tag">ACT</span>
-                <h3>Closed-loop power cut: 400W → 150W in milliseconds</h3>
-                <p>
-                  On detection, the C++ ECO Controller issues an NVML power cap command. The power cut forces the GPU to
-                  operate within its thermal envelope without interrupting the running workload. This is confirmed live
-                  on a GCP A100 Spot instance with Grafana validation.
-                </p>
-              </div>
-            </div>
-            <div className="flow-step">
-              <div className="step-num">03</div>
-              <div className="step-body">
-                <span className="step-tag">CORDON</span>
-                <h3>3-sample shield → Slurm DRAIN, zero false positives</h3>
-                <p>
-                  If SM Clock degradation persists across 3 consecutive samples, the agent issues a Slurm drain with a
-                  machine-readable reason string. New jobs are blocked. The 3-sample buffer eliminates false positives
-                  from transient spikes — a deliberate tradeoff tuned from live workload data.
-                </p>
-              </div>
-            </div>
-            <div className="flow-step">
-              <div className="step-num">04</div>
-              <div className="step-body">
-                <span className="step-tag">RECOVER</span>
-                <h3>Auto-RESUME the moment hardware is healthy</h3>
-                <p>
-                  Recovery applies the same 3-sample logic in reverse. Three consecutive healthy SM Clock readings
-                  trigger an automatic <code className="code-inline">state=resume</code>. The node rejoins the cluster
-                  pool without human intervention. The full IDLE → DRAIN → IDLE state machine is validated and running.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section id="agent"><div className="container"><p className="eyebrow">Secondary capability · pilot / assessment</p><h2>Extend efficiency <em>above the GPU</em></h2><div className="agent-grid"><div><h3>Agent Efficiency</h3><p className="section-lede">Once GPU infrastructure efficiency is understood, BZICHIMEM can extend optimization into the software layer.</p><p className="body-copy">Modern AI agents may consume unnecessary resources through repeated context, oversized histories, unnecessary tool calls, retry chains, repeated tool outputs, agent loops, inefficient model selection and poor cache reuse.</p><p className="objective">The objective is not simply fewer tokens.<br /><strong>Resources per Successful Task.</strong></p></div><div className="metric-list"><h3>Measure</h3>{agentMetrics.map((m) => <div className="metric-item" key={m}><span className="arch-dot" />{m}</div>)}<div className="kpi-mini">Tokens / Successful Task ↓<br />GPU-seconds / Successful Task ↓</div></div></div></div></section>
 
-      {/* ARCHITECTURE */}
-      <section id="arch">
-        <div className="container">
-          <h2>
-            Built for the cluster,
-            <br />
-            <em>not the dashboard</em>
-          </h2>
-          <div className="arch-grid">
-            <div className="arch-card">
-              <h3>What&apos;s running today</h3>
-              <div className="arch-item">
-                <div className="arch-dot" />
-                <div className="arch-item-body">
-                  <div className="arch-item-title">C++ ECO/Power Controller</div>
-                  <div className="arch-item-sub">DCGM Profiling API · NVML actuator · &lt;15ms loop</div>
-                </div>
-              </div>
-              <div className="arch-item">
-                <div className="arch-dot" />
-                <div className="arch-item-body">
-                  <div className="arch-item-title">Slurm Integration</div>
-                  <div className="arch-item-sub">IDLE → DRAIN → IDLE state machine · drain reason strings</div>
-                </div>
-              </div>
-              <div className="arch-item">
-                <div className="arch-dot" />
-                <div className="arch-item-body">
-                  <div className="arch-item-title">Prometheus Exporter</div>
-                  <div className="arch-item-sub">4 real metrics · flush_thread · zero hot-path overhead</div>
-                </div>
-              </div>
-              <div className="arch-item">
-                <div className="arch-dot" />
-                <div className="arch-item-body">
-                  <div className="arch-item-title">SQLite Telemetry Store</div>
-                  <div className="arch-item-sub">WAL mode · async writer · real DCGM data confirmed</div>
-                </div>
-              </div>
-            </div>
-            <div className="arch-card">
-              <h3>Architectural principles</h3>
-              <div className="arch-item">
-                <div className="arch-dot" />
-                <div className="arch-item-body">
-                  <div className="arch-item-title">C++ controls the hot path</div>
-                  <div className="arch-item-sub">No network dependency for emergency power cuts</div>
-                </div>
-              </div>
-              <div className="arch-item">
-                <div className="arch-dot" />
-                <div className="arch-item-body">
-                  <div className="arch-item-title">Prometheus is read-only</div>
-                  <div className="arch-item-sub">Observability layer never triggers control decisions</div>
-                </div>
-              </div>
-              <div className="arch-item">
-                <div className="arch-dot" />
-                <div className="arch-item-body">
-                  <div className="arch-item-title">Zero application changes</div>
-                  <div className="arch-item-sub">Deploy as a sidecar daemon; workloads are unaware</div>
-                </div>
-              </div>
-              <div className="arch-item">
-                <div className="arch-dot" />
-                <div className="arch-item-body">
-                  <div className="arch-item-title">SM Clock, not temperature</div>
-                  <div className="arch-item-sub">Temperature is a lagging indicator; clock degradation is the signal</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section id="trace"><div className="container"><div className="trace-panel"><div className="trace-head"><span>Agent Efficiency Trace</span><span className="t-green">● illustrative</span></div><div className="trace-grid"><div><span>WORKFLOW</span><strong>agent-prod-07</strong></div><div><span>TASK STATUS</span><strong className="t-green">SUCCESS</strong></div><div><span>INPUT TOKENS</span><strong>84,200</strong></div><div><span>REPEATED CONTEXT</span><strong>31%</strong></div><div><span>AGENT STEPS</span><strong>14</strong></div><div><span>TOOL CALLS</span><strong>11</strong></div><div><span>RETRIES</span><strong>3</strong></div><div><span>GPU TIME</span><strong>38.4 sec</strong></div></div><div className="opportunities"><span>EFFICIENCY OPPORTUNITIES</span><p>↳ Repeated context detected</p><p>↳ Tool-result replay detected</p><p>↳ Retry chain detected</p></div><small>Illustrative workflow example — not customer evidence.</small></div></div></section>
 
-      {/* CONTACT */}
-      <section id="contact">
-        <div className="container">
-          <div className="cta-box">
-            <p className="eyebrow" style={{ marginBottom: 16 }}>
-              Early Access · Pilot Program
-            </p>
-            <h2>
-              Run HBMGuard on
-              <br />
-              <em>your</em> cluster
-            </h2>
-            <p>
-              We&apos;re working with a small number of AI inference providers and HPC operators to validate HBMGuard on
-              their GPU fleets. If you&apos;re running A100 / H100 / H200 nodes on Slurm and you&apos;re tired of thermal
-              surprises, let&apos;s talk.
-            </p>
-            <ContactForm />
-          </div>
-        </div>
-      </section>
+      <section id="arch"><div className="container"><h2>Full-stack <em>architecture</em></h2><div className="architecture"><div className="arch-layer">APPLICATION<small>Agents / RAG / Tools</small></div><div className="arch-arrow">↓</div><div className="arch-layer complementary">AGENT EFFICIENCY<small>Tokens / Context / Cache / Steps</small></div><div className="arch-arrow">↓</div><div className="arch-layer">INFERENCE<small>Model / KV Cache</small></div><div className="arch-arrow">↓</div><div className="arch-layer primary-layer">HBMGUARD<small>GPU / HBM / Power / Thermal</small></div><div className="arch-arrow">↓</div><div className="arch-layer business">BUSINESS METRICS<small>Energy / Task · GPU Time / Task · Tokens / Task · Cost / Task · SLA</small></div></div></div></section>
 
-      {/* FOOTER */}
-      <footer>
-        <div className="container">
-          <div className="footer-inner">
-            <div className="footer-logo">HBMGuard — GPU thermal intelligence</div>
-            <div className="footer-links">
-              <a
-                href="https://www.linkedin.com/feed/update/urn:li:activity:7472996360217280513/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LinkedIn
-              </a>
-              <a href="mailto:contact@bzichimem.com">contact@bzichimem.com</a>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </>
-  )
+      <section id="private"><div className="container"><p className="eyebrow">Deployment model</p><h2>Built for <em>Private AI Infrastructure</em></h2><p className="section-lede">BZICHIMEM is designed for environments where sensitive application data should remain inside the customer&apos;s controlled environment.</p><div className="private-grid"><div className="problem-card"><h3>Metadata-only assessment mode</h3><p>Prompts, documents, RAG content and model responses can remain inside the customer&apos;s environment.</p></div><div className="problem-card"><h3>Operational telemetry</h3><p>Token counts · context size · agent-step counts · tool-call counts · retry counts · latency · cache statistics · GPU utilization · HBM telemetry · power consumption.</p></div></div><div className="pills">{environments.map((e) => <span key={e}>{e}</span>)}</div></div></section>
+
+      <section id="pilot"><div className="container"><h2>Start with GPU Efficiency.<br /><em>Expand to Agent Efficiency.</em></h2><div className="pilot-grid"><PilotCard title="HBMGuard Pilot" items={["GPU / HBM / power telemetry","Workload profiling","Controlled optimization","A/B validation"]} outputs={["Energy / workload","GPU time / workload","Performance-per-watt","SLA impact"]} /><PilotCard title="Agent Efficiency Assessment" items={["Token accounting","Context analysis","Agent-step analysis","Cache / retry analysis","A/B validation"]} outputs={["Tokens / successful task","GPU-seconds / successful task","Latency","Task success rate","Potential optimization areas"]} /></div></div></section>
+
+      <section id="contact"><div className="container"><div className="cta-box"><p className="eyebrow">Evidence-gated optimization · private deployment</p><h2>Optimize the Infrastructure First.<br /><em>Then Optimize the Agent.</em></h2><p>BZICHIMEM connects AI software behavior with the physical infrastructure running it.</p><ContactForm /></div></div></section>
+    </main>
+    <footer><div className="container"><div className="footer-inner"><div className="footer-logo">BZICHIMEM — AI Infrastructure Efficiency<br /><span>HBMGuard + Agent Efficiency</span></div><div className="footer-links"><a href="mailto:contact@bzichimem.com">contact@bzichimem.com</a><span>Private deployment</span><span>Metadata-first assessment</span></div></div></div></footer>
+  </>
+}
+
+function PilotCard({ title, items, outputs }: { title: string; items: string[]; outputs: string[] }) {
+  return <div className="pilot-card"><h3>{title}</h3><span className="card-label">BASELINE</span>{items.map((item) => <div className="metric-item" key={item}><span className="arch-dot" />{item}</div>)}<span className="card-label">OUTPUT</span><div className="output-list">{outputs.map((output) => <span key={output}>{output}</span>)}</div></div>
 }
