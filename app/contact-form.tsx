@@ -4,13 +4,13 @@ import { useState } from "react"
 
 export function ContactForm() {
   const [submitting, setSubmitting] = useState(false)
-  const [btnText, setBtnText] = useState("Request HBMGuard Pilot →")
+  const [btnText, setBtnText] = useState("Request an Efficiency Pilot →")
   const [status, setStatus] = useState<{ message: string; color: string } | null>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const form = e.currentTarget
-    const originalBtnText = "Request HBMGuard Pilot →"
+    const originalBtnText = "Request an Efficiency Pilot →"
     setSubmitting(true)
     setBtnText("Sending...")
     setStatus(null)
