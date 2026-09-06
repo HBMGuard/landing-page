@@ -2,9 +2,20 @@ import type { Metadata, Viewport } from "next"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "HBMGuard — Self-Healing GPU Clusters",
+  title: "HBMGuard + ContextGuard — AI Infrastructure Efficiency",
   description:
-    "Runtime GPU telemetry and closed-loop power management for HPC and enterprise GPU clusters. Stop waking up engineers for thermal throttling.",
+    "HBMGuard optimizes GPU, HBM and power efficiency. ContextGuard enforces token budgets, context safety, loop protection and verifiable audit for AI agents.",
+  openGraph: {
+    title: "HBMGuard + ContextGuard — AI Infrastructure Efficiency",
+    description:
+      "Evidence-gated efficiency from GPU/HBM/power telemetry to agent context, tokens, loops and audit.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HBMGuard + ContextGuard — AI Infrastructure Efficiency",
+    description:
+      "Evidence-gated efficiency from GPU/HBM/power telemetry to agent context, tokens, loops and audit.",
+  },
 }
 
 export const viewport: Viewport = {
