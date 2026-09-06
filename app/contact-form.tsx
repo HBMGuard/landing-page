@@ -54,7 +54,7 @@ export function ContactForm() {
         <input type="text" name="company" placeholder="Company / Organization" />
         <select name="setup" defaultValue="">
           <option value="" disabled>
-            Your GPU setup (approx.)
+            Your AI / GPU environment (approx.)
           </option>
           <option value="1-10">1–10 GPUs</option>
           <option value="10-100">10–100 GPUs</option>
@@ -62,7 +62,7 @@ export function ContactForm() {
           <option value="1000+">1000+ GPUs</option>
           <option value="cloud-spot">Primarily cloud spot (GCP / AWS)</option>
         </select>
-        <textarea name="message" placeholder="What's the thermal problem costing you? (optional)" />
+        <textarea name="message" placeholder="What AI infrastructure or agent-efficiency problem are you trying to solve? (optional)" />
         <button
           className="btn-primary"
           type="submit"
