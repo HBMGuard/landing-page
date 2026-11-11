@@ -2,19 +2,19 @@ import type { Metadata, Viewport } from "next"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "HBMGuard + ContextGuard — AI Infrastructure Efficiency",
+  title: "Bzichimem | Measured flexibility for AI data centers",
   description:
-    "HBMGuard optimizes GPU, HBM and power efficiency. ContextGuard enforces token budgets, context safety, loop protection and verifiable audit for AI agents.",
+    "We measure how far GPU power can drop, and how fast, while AI services keep their response-time targets, then model how much load a data center can shed during a grid limit and how much backup it still needs.",
   openGraph: {
-    title: "HBMGuard + ContextGuard — AI Infrastructure Efficiency",
+    title: "Bzichimem | Measured flexibility for AI data centers",
     description:
-      "Evidence-gated efficiency from GPU/HBM/power telemetry to agent context, tokens, loops and audit.",
+      "On one NVIDIA H100, a language-model server kept 93% of its throughput with 21% less power. Site models for grid connection, curtailment and backup.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "HBMGuard + ContextGuard — AI Infrastructure Efficiency",
+    title: "Bzichimem | Measured flexibility for AI data centers",
     description:
-      "Evidence-gated efficiency from GPU/HBM/power telemetry to agent context, tokens, loops and audit.",
+      "On one NVIDIA H100, a language-model server kept 93% of its throughput with 21% less power. Site models for grid connection, curtailment and backup.",
   },
 }
 

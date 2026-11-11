@@ -2,15 +2,16 @@
 
 import { useState } from "react"
 
+const SUBMIT_TEXT = "Request a site pilot →"
+
 export function ContactForm() {
   const [submitting, setSubmitting] = useState(false)
-  const [btnText, setBtnText] = useState("Request an Efficiency Pilot →")
-  const [status, setStatus] = useState<{ message: string; color: string } | null>(null)
+  const [btnText, setBtnText] = useState(SUBMIT_TEXT)
+  const [status, setStatus] = useState<{ message: string; ok: boolean } | null>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const form = e.currentTarget
-    const originalBtnText = "Request an Efficiency Pilot →"
     setSubmitting(true)
     setBtnText("Sending...")
     setStatus(null)
@@ -21,61 +22,75 @@ export function ContactForm() {
         body: new FormData(form),
         headers: { Accept: "application/json" },
       })
-
-      if (response.ok) {
-        form.reset()
-        setStatus({ message: "✓ Request received — we'll be in touch shortly.", color: "var(--green)" })
-        setBtnText("Sent ✓")
-      } else {
-        throw new Error("Submission failed")
-      }
-    } catch (err) {
-      setStatus({
-        message: "✗ Something went wrong. Email us directly at contact@bzichimem.com",
-        color: "var(--red)",
-      })
+      if (!response.ok) throw new Error("Submission failed")
+      form.reset()
+      setStatus({ message: "✓ Request received. We'll reply by email.", ok: true })
+      setBtnText("Sent ✓")
+    } catch {
+      setStatus({ message: "✗ Something went wrong. Email us at contact@bzichimem.com", ok: false })
       setSubmitting(false)
-      setBtnText(originalBtnText)
+      setBtnText(SUBMIT_TEXT)
     }
   }
 
   return (
     <>
-      <form
-        className="form-row"
-        id="contact-form"
-        action="https://formspree.io/f/xeewbglg"
-        method="POST"
-        onSubmit={handleSubmit}
-      >
-        <input type="hidden" name="_subject" value="New HBMGuard Pilot Request" />
-        <input type="text" name="name" placeholder="Your name" required />
-        <input type="email" name="email" placeholder="Work email" required />
-        <input type="text" name="company" placeholder="Company / Organization" />
-        <select name="setup" defaultValue="">
-          <option value="" disabled>
-            Your AI / GPU environment (approx.)
-          </option>
-          <option value="1-10">1–10 GPUs</option>
-          <option value="10-100">10–100 GPUs</option>
-          <option value="100-1000">100–1000 GPUs</option>
-          <option value="1000+">1000+ GPUs</option>
-          <option value="cloud-spot">Primarily cloud spot (GCP / AWS)</option>
-        </select>
-        <textarea name="message" placeholder="What AI infrastructure or agent-efficiency problem are you trying to solve? (optional)" />
-        <button
-          className="btn-primary"
-          type="submit"
-          style={{ alignSelf: "flex-start", opacity: submitting ? 0.6 : 1 }}
-          disabled={submitting}
-        >
+      <form className="pilot-form" id="contact-form" action="https://formspree.io/f/xeewbglg" method="POST" onSubmit={handleSubmit}>
+        <input type="hidden" name="_subject" value="New site pilot request" />
+        <div className="row2">
+          <label>
+            Name
+            <input type="text" name="name" required autoComplete="name" />
+          </label>
+          <label>
+            Work email
+            <input type="email" name="email" required autoComplete="email" />
+          </label>
+        </div>
+        <div className="row2">
+          <label>
+            Company
+            <input type="text" name="company" autoComplete="organization" />
+          </label>
+          <label>
+            Site stage
+            <select name="site_stage" defaultValue="">
+              <option value="" disabled>
+                Choose one
+              </option>
+              <option value="planning">Planning</option>
+              <option value="connection-commitment">Connection commitment</option>
+              <option value="under-construction">Under construction</option>
+              <option value="operating">Operating</option>
+            </select>
+          </label>
+        </div>
+        <label>
+          Planned IT load
+          <select name="it_load" defaultValue="">
+            <option value="" disabled>
+              Choose one
+            </option>
+            <option value="under-10mw">Under 10 MW</option>
+            <option value="10-50mw">10–50 MW</option>
+            <option value="50-200mw">50–200 MW</option>
+            <option value="over-200mw">Over 200 MW</option>
+          </select>
+        </label>
+        <label>
+          The power decision you need to make
+          <textarea name="message" />
+        </label>
+        <button className="submit" type="submit" disabled={submitting} style={{ opacity: submitting ? 0.6 : 1 }}>
           {btnText}
         </button>
-        <p className="form-note">Private deployment. Evidence-gated optimization. Just a technical conversation.</p>
+        <p className="form-note">We reply by email. Aggregated site data is enough for a first assessment.</p>
       </form>
-      <div id="form-status" style={status ? { display: "block", color: status.color } : undefined}>
-        {status?.message}
-      </div>
+      {status && (
+        <div id="form-status" className={status.ok ? "ok" : "err"} role="status">
+          {status.message}
+        </div>
+      )}
     </>
   )
 }

@@ -1,51 +1,277 @@
+import type { CSSProperties } from "react"
 import { ContactForm } from "./contact-form"
+import { GridLimitGraphic, ShedCurveChart, StepResponseChart } from "./charts"
+import { Reveal } from "./reveal"
 
-const environments = ["NVIDIA GPUs", "vLLM", "NVIDIA NIM", "TensorRT-LLM", "Triton", "Ray", "Kubernetes", "Slurm"]
-const gpuMetrics = ["GPU energy consumption", "GPU utilization", "HBM activity", "Memory-bound behavior", "Performance per watt", "GPU time per workload", "Thermal behavior", "Workload SLA impact"]
-const contextMetrics = ["Exact input tokens", "Atomic task budgets", "Context growth", "Loop detection", "Tool calls", "Retries", "Audit verification"]
-const contextFlow = [
-  ["01", "COUNT", "Exact model tokenizer"],
-  ["02", "BUDGET", "Reserve task budget atomically"],
-  ["03", "COMPACT", "Remove only permitted old context"],
-  ["04", "ENFORCE", "Block loops and hard-limit violations, then record a verifiable audit event"],
+const len = (n: number) => ({ "--len": n }) as CSSProperties
+
+const planning = [
+  {
+    title: "Grid connection",
+    body: "Build the consumption profile a connection request needs: operating regime, ramp rates, operation during shedding hours and planned growth for each phase.",
+    icon: <path className="draw" style={len(60)} d="M13 2 4 14h7l-1 8 9-12h-7z" />,
+  },
+  {
+    title: "Load curtailment",
+    body: "Test which GPU workloads can run at lower power or wait, while priority services stay within their response-time targets.",
+    icon: <path className="draw" style={len(60)} d="M3 17h4l3-8 4 10 3-6h4" />,
+  },
+  {
+    title: "Backup power",
+    body: "Size the MW and MWh backup must cover in a shedding event, up to 70% of load for six hours under the proposed rules, net of what flexible compute can shed.",
+    icon: (
+      <>
+        <rect className="draw" style={len(60)} x="3" y="7" width="16" height="10" rx="2" />
+        <path d="M21 10v4" />
+        <path className="draw" style={len(20)} d="M7 12h6" />
+      </>
+    ),
+  },
+]
+
+const steps = [
+  {
+    n: "01 · INPUTS",
+    title: "Site inputs",
+    body: "A planned or measured load profile, grid import limits, backup assumptions and the mix of priority and deferrable workloads. Aggregated data is enough to start.",
+  },
+  {
+    n: "02 · MEASURE",
+    title: "Cloud tests and site model",
+    body: "Board power, response time, throughput and recovery on workloads like yours, then the effect on the whole facility using your site inputs.",
+  },
+  {
+    n: "03 · DELIVER",
+    title: "What you receive",
+    body: "A demand profile, a comparison of curtailment scenarios, and an estimate of backup power and energy for your engineering team to review.",
+  },
 ]
 
 export default function Page() {
-  return <>
-    <nav><div className="nav-inner"><a className="logo" href="#hero">BZICHIMEM<span>_</span></a><div className="nav-links"><a className="nav-link" href="#hbmguard">HBMGuard</a><a className="nav-link" href="#contextguard">ContextGuard</a><a className="nav-link" href="#arch">Architecture</a><a className="btn-nav" href="#contact">Request Pilot</a></div></div></nav>
-    <main>
-      <section id="hero"><div className="container"><div className="hero-grid"><div className="hero-copy">
-        <p className="eyebrow">AI Infrastructure Efficiency</p><h1><span className="hero-brand">HBMGuard</span></h1>
-        <h2 className="hero-headline">Reduce GPU Energy.<br />Then Control the Context.</h2>
-        <p className="hero-sub">Infrastructure-aware optimization for private AI — from GPU, HBM and power to agents, context and tokens.</p>
-        <div className="hero-ctas"><a className="btn-primary" href="#contact">Request an HBMGuard Pilot</a><a className="btn-secondary" href="#contextguard">Explore ContextGuard</a></div>
-        <p className="hero-evidence">20.47% mean GPU-energy reduction · Replicated A100 KV-cache qualification · &lt;1% throughput impact · workload-specific results</p>
-        <div className="stack-line"><span>GPU / HBM / Power</span><b>↑</b><strong>HBMGuard</strong><b>↑</b><span>Context / Tokens / Loops</span><b>↑</b><strong>ContextGuard</strong></div>
-        <p className="hero-note">Built for private, on-prem and security-sensitive AI environments.</p>
-      </div><div className="hero-telemetry"><div className="terminal-strip"><div className="terminal-bar"><div className="dot dot-r" /><div className="dot dot-y" /><div className="dot dot-g" /><span className="term-title">hbmguard_agent · node-a100-01 · live</span></div><div className="terminal-body"><div><span className="t-dim">[2026-06-18 08:41:03]</span> <span className="t-white">HBMGuard v0.9 — DCGM Profiling API connected</span></div><div><span className="t-dim">[08:41:05]</span> <span className="t-white">SM_CLOCK: 1410 MHz DRAM_ACTIVE: 94% PWR: 398W</span> <span className="t-amber">⚠ Memory Wall detected</span></div><div><span className="t-dim">[08:41:05]</span> <span className="t-red">ECO_CTRL: applying workload-aware power policy</span></div><div><span className="t-dim">[08:41:14]</span> <span className="t-amber">HBM telemetry: threshold crossed → controlled response</span></div><div><span className="t-dim">[08:42:31]</span> <span className="t-green">✓ Node healthy. Workload restored. Engineers paged: 0.</span> <span className="blink t-dim">█</span></div></div></div></div></div></div></section>
+  return (
+    <>
+      <div className="bz-bg" aria-hidden="true" />
+      <nav>
+        <div className="container nav-inner">
+          <a className="logo" href="#hero">
+            BZICHIMEM<span>_</span>
+          </a>
+          <div className="nav-links">
+            <a className="nav-link" href="#results">
+              Measurements
+            </a>
+            <a className="nav-link" href="#planning">
+              Site planning
+            </a>
+            <a className="nav-link" href="#pilot">
+              Pilot scope
+            </a>
+            <a className="btn-nav" href="#contact">
+              Discuss a Pilot
+            </a>
+          </div>
+        </div>
+      </nav>
 
-      <section id="hbmguard"><div className="container"><p className="eyebrow">Primary capability · HBMGuard</p><h2>HBMGuard — GPU Infrastructure <em>Efficiency</em></h2><p className="section-lede">AI infrastructure efficiency begins below the model layer. HBMGuard observes and optimizes the physical behavior of GPU workloads using hardware telemetry, workload measurements and controlled GPU power policies.</p><div className="metric-layout"><div className="metric-list"><h3>HBMGuard focuses on</h3>{gpuMetrics.map((m) => <div className="metric-item" key={m}><span className="arch-dot" />{m}</div>)}</div><div className="kpi-card"><span className="kpi-label">Primary KPI</span><strong>Energy / Successful Workload <em>↓</em></strong><span className="kpi-label">Secondary KPI</span><strong>Performance per Watt <em>↑</em></strong></div></div></div></section>
+      <main>
+        <section id="hero" className="hero">
+          <div className="container hero-grid">
+            <div className="hero-copy">
+              <p className="eyebrow">For data center developers and energy partners</p>
+              <h1>
+                Measured flexibility
+                <br />
+                for <em>AI data centers</em>
+              </h1>
+              <p className="hero-sub">
+                We measure how far GPU power can drop, and how fast, while AI services keep their response-time
+                targets. Then we turn it into a site model: how much load can be shed during a grid limit, and how much
+                backup is still needed.
+              </p>
+              <div className="hero-ctas">
+                <a className="btn-primary" href="#contact">
+                  Discuss a site pilot <span aria-hidden="true">→</span>
+                </a>
+                <a className="btn-secondary" href="#results">
+                  See the H100 results
+                </a>
+              </div>
+            </div>
+            <GridLimitGraphic />
+          </div>
+        </section>
 
-      <section id="evidence"><div className="container"><p className="eyebrow">Validated result · workload-specific</p><h2>Evidence-backed GPU <em>efficiency</em></h2><div className="evidence-grid"><div className="evidence-number"><strong>20.47%</strong><span>mean GPU-energy reduction</span><small>Replicated A100 KV-cache qualification</small></div><div className="evidence-number"><strong>&lt;1%</strong><span>throughput impact</span><small>measured within the qualification workload</small></div></div><p className="qualification">Results are workload-specific and must be independently qualified for each customer environment. No universal savings are implied.</p></div></section>
+        <div className="why">
+          <div className="container why-inner reveal">
+            <span className="why-badge">Why now</span>
+            <div className="why-body">
+              <p>
+                Under rules proposed by Israel&apos;s Electricity Authority, from 2028 the system operator could cut a
+                data center&apos;s supply to 30% of its connection, for up to 200 hours a year.{" "}
+                <span>
+                  Developers need to know how much of their load can flex, and how much backup is still left to build.
+                </span>
+              </p>
+              <dl className="why-facts">
+                <div>
+                  <dt>
+                    <span data-count="30">30</span>%
+                  </dt>
+                  <dd>of the connection: the lowest supply during a shedding event</dd>
+                </div>
+                <div>
+                  <dt>
+                    <span data-count="200">200</span> h
+                  </dt>
+                  <dd>of shedding a year at most</dd>
+                </div>
+                <div>
+                  <dt>2–6 h</dt>
+                  <dd>longest event: 2 h on under a day&apos;s notice, 6 h on 48 hours&apos; notice</dd>
+                </div>
+              </dl>
+              <p className="why-note">
+                The Authority is also weighing criteria for priority in the connection queue, and flexibility services
+                to the grid are one of the options.
+              </p>
+            </div>
+          </div>
+        </div>
 
-      <section id="contextguard"><div className="container"><p className="eyebrow">Secondary capability · ContextGuard</p><h2>Control the Context. <em>Protect the Task.</em></h2><p className="section-lede">ContextGuard is a deterministic enforcement gateway between AI agents and an OpenAI-compatible model endpoint. It provides exact model-token accounting, atomic per-task budgets, safe context compaction, repeated-request loop protection, hard input-budget enforcement with no silent truncation, and tamper-evident HMAC audit verification.</p><div className="agent-grid"><div><h3>Agent / context efficiency and safety</h3><p className="body-copy">ContextGuard keeps AI agents within explicit token, loop, and audit boundaries before requests reach the model. It reduces unnecessary context while preserving required information and gives operators a verifiable decision trail.</p><p className="objective">The objective is not simply fewer tokens.<br /><strong>Resources per Successful Task.</strong></p></div><div className="metric-list"><h3>ContextGuard enforces</h3>{contextMetrics.map((m) => <div className="metric-item" key={m}><span className="arch-dot" />{m}</div>)}</div></div></div></section>
+        <section id="results" className="section">
+          <div className="container">
+            <div className="section-head reveal">
+              <p className="eyebrow">Measured on one NVIDIA H100</p>
+              <h2>How much power AI inference can give back</h2>
+              <p className="lead">
+                A language-model server under full load, with the GPU power limit stepped from 700 W down to 200 W.
+                Each level was measured three times.
+              </p>
+            </div>
+            <div className="stats">
+              <div className="stat reveal">
+                <div className="stat-value">
+                  <span data-count="21">21</span>
+                  <small>%</small>
+                </div>
+                <div className="stat-label">less power at 93% of throughput</div>
+                <div className="stat-note">631 W → 499 W, 500 W limit</div>
+              </div>
+              <div className="stat reveal">
+                <div className="stat-value">
+                  <span data-count="30">30</span>
+                  <small>%</small>
+                </div>
+                <div className="stat-label">less power with latency targets met</div>
+                <div className="stat-note">at 60% load, 400 W limit</div>
+              </div>
+              <div className="stat reveal">
+                <div className="stat-value">
+                  <span data-count="0.6" data-dec="1">
+                    0.6
+                  </span>
+                  <small>s</small>
+                </div>
+                <div className="stat-label">to reach a new power level</div>
+                <div className="stat-note">90% of the drop, slowest of 5 steps</div>
+              </div>
+              <div className="stat reveal">
+                <div className="stat-value">
+                  <span data-count="0.09" data-dec="2">
+                    0.09
+                  </span>
+                  <small>s</small>
+                </div>
+                <div className="stat-label">back to work after a pause</div>
+                <div className="stat-note">119 W idle with the model loaded</div>
+              </div>
+            </div>
+            <div className="chart-row">
+              <div className="panel reveal">
+                <h3>Throughput kept as power drops</h3>
+                <p>Share of full-power throughput against share of full-power draw. Everything above the grey line is work kept.</p>
+                <ShedCurveChart />
+              </div>
+              <div className="panel reveal">
+                <h3>Power after a limit command</h3>
+                <p>GPU power under load. The limit is applied at 0 s and lifted at 10 s.</p>
+                <StepResponseChart />
+              </div>
+            </div>
+            <p className="fine reveal">
+              One NVIDIA H100 80 GB on Google Cloud, Qwen2.5-7B-Instruct on vLLM, 64 concurrent requests, November
+              2026. Latency targets: 95% of requests get a first token within 1 s and each further token within 50 ms.
+              GPU board power only: server, cooling and conversion losses are modeled per site, not measured here.
+            </p>
+          </div>
+        </section>
 
-      <section id="context-evidence"><div className="container"><div className="trace-panel"><div className="trace-head"><span>Controlled A100 demonstration — workload-specific</span><span className="t-green">● evidence panel</span></div><div className="trace-grid context-evidence-grid"><div><span>MODEL</span><strong>Qwen2.5-7B-Instruct</strong></div><div><span>HARDWARE</span><strong>NVIDIA A100-SXM4-40GB</strong></div><div><span>ORIGINAL INPUT</span><strong>1,781 tokens</strong></div><div><span>FORWARDED INPUT</span><strong>216 tokens</strong></div><div><span>INPUT SAVED</span><strong>1,565 tokens</strong></div><div><span>CONTROLLED-DEMO REDUCTION</span><strong className="t-green">87.87%</strong></div><div><span>MODEL FAILURES</span><strong>0</strong></div><div><span>AUDIT</span><strong>HMAC verified</strong></div><div><span>TOKENIZER</span><strong>exact via vLLM /tokenize</strong></div></div><small>Demonstration result from one controlled workload; it is not a universal savings guarantee. Customer environments require independent qualification.</small></div></div></section>
+        <section id="planning" className="section">
+          <div className="container">
+            <div className="section-head reveal">
+              <h2>Plan the connection, curtailment and backup</h2>
+              <p className="lead">Three decisions for each connection phase, made with measured numbers instead of nameplate assumptions.</p>
+            </div>
+            <div className="cards">
+              {planning.map((c) => (
+                <div className="card reveal" key={c.title}>
+                  <div className="icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      {c.icon}
+                    </svg>
+                  </div>
+                  <h3>{c.title}</h3>
+                  <p>{c.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-      <section id="workflow"><div className="container"><h2>ContextGuard flow, <em>enforced</em></h2><div className="flow-steps">{contextFlow.map(([n, t, p]) => <div className="flow-step" key={n}><div className="step-num">{n}</div><div className="step-body"><span className="step-tag">{t}</span><p>{p}</p></div></div>)}</div></div></section>
+        <section id="pilot" className="section">
+          <div className="container">
+            <div className="section-head reveal">
+              <h2>Pilot scope for one site</h2>
+              <p className="lead">Start with one connection phase or one operating scenario, and the decision your project team needs to make.</p>
+            </div>
+            <div className="flow" aria-hidden="true" />
+            <div className="steps">
+              {steps.map((s) => (
+                <div className="step reveal" key={s.title}>
+                  <div className="step-num">{s.n}</div>
+                  <h3>{s.title}</h3>
+                  <p>{s.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-      <section id="arch"><div className="container"><h2>Full-stack <em>architecture</em></h2><div className="architecture"><div className="arch-layer">APPLICATION / AGENTS<small>AI applications and agent workflows</small></div><div className="arch-arrow">↓</div><div className="arch-layer complementary">CONTEXTGUARD / TOKENS / LOOPS / AUDIT<small>Deterministic gateway · budgets · compaction · HMAC audit</small></div><div className="arch-arrow">↓</div><div className="arch-layer">INFERENCE / MODEL / KV CACHE<small>OpenAI-compatible model endpoint</small></div><div className="arch-arrow">↓</div><div className="arch-layer primary-layer">HBMGUARD / GPU / HBM / POWER<small>Physical workload efficiency and telemetry</small></div></div></div></section>
+        <section id="contact" className="section">
+          <div className="container contact-grid">
+            <div className="reveal">
+              <h2>Discuss a site pilot</h2>
+              <p className="lead">
+                Tell us which site or connection phase you are planning and the power decision you need to make. A short
+                description is enough for the first conversation.
+              </p>
+            </div>
+            <div className="reveal">
+              <ContactForm />
+            </div>
+          </div>
+        </section>
+      </main>
 
-      <section id="private"><div className="container"><p className="eyebrow">Deployment model</p><h2>Built for <em>Private AI Infrastructure</em></h2><p className="section-lede">BZICHIMEM is designed for environments where sensitive application data should remain inside the customer&apos;s controlled environment.</p><div className="private-grid"><div className="problem-card"><h3>Metadata-only assessment mode</h3><p>Prompts, documents, RAG content and model responses can remain inside the customer&apos;s environment.</p></div><div className="problem-card"><h3>Operational telemetry</h3><p>Token counts · context size · agent-step counts · tool-call counts · retry counts · latency · cache statistics · GPU utilization · HBM telemetry · power consumption.</p></div></div><div className="environment-label">Designed to integrate with</div><div className="pills">{environments.map((e) => <span key={e}>{e}</span>)}</div></div></section>
-
-      <section id="pilot"><div className="container"><h2>Start with GPU Efficiency.<br /><em>Expand to Agent Efficiency.</em></h2><div className="pilot-grid"><PilotCard title="HBMGuard GPU Efficiency Pilot" items={["GPU / HBM / power telemetry", "Workload profiling", "Controlled optimization", "A/B validation"]} outputs={["Energy / workload", "GPU time / workload", "Performance-per-watt", "SLA impact"]} /><PilotCard title="ContextGuard Agent Efficiency Assessment" items={["Exact token accounting", "Atomic budget enforcement", "Context compaction", "Loop and audit verification"]} outputs={["Tokens / successful task", "Forwarded context", "Model failures", "Potential optimization areas"]} /></div></div></section>
-
-      <section id="contact"><div className="container"><div className="cta-box"><p className="eyebrow">Evidence-gated optimization · private deployment</p><h2>Optimize the Infrastructure First.<br /><em>Then Optimize the Agent.</em></h2><p>BZICHIMEM connects AI software behavior with the physical infrastructure running it.</p><ContactForm /></div></div></section>
-    </main>
-    <footer><div className="container"><div className="footer-inner"><div className="footer-logo">BZICHIMEM — AI Infrastructure Efficiency<br /><span>HBMGuard + ContextGuard</span></div><div className="footer-links"><a href="mailto:contact@bzichimem.com">contact@bzichimem.com</a><span>Private deployment</span><span>Metadata-first assessment</span></div></div></div></footer>
-  </>
-}
-
-function PilotCard({ title, items, outputs }: { title: string; items: string[]; outputs: string[] }) {
-  return <div className="pilot-card"><h3>{title}</h3><span className="card-label">BASELINE</span>{items.map((item) => <div className="metric-item" key={item}><span className="arch-dot" />{item}</div>)}<span className="card-label">OUTPUT</span><div className="output-list">{outputs.map((output) => <span key={output}>{output}</span>)}</div></div>
+      <footer>
+        <div className="container foot">
+          <span>
+            <span className="foot-logo">BZICHIMEM</span> · Measured flexibility for AI data centers
+          </span>
+          <a href="mailto:contact@bzichimem.com">contact@bzichimem.com</a>
+        </div>
+      </footer>
+      <Reveal />
+    </>
+  )
 }
