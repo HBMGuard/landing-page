@@ -29,6 +29,29 @@ const planning = [
   },
 ]
 
+const career = [
+  { year: "2005", org: "Silentium", role: "Acoustic engineer: wave propagation, vibration and low-frequency modeling" },
+  { year: "2007", org: "Bar-Ilan University", role: "Research assistant in optics: beam shaping, interferometry, wavefront control" },
+  { year: "2010", org: "ELTA Systems", role: "Radar and AESA systems engineer: GPU-accelerated physical simulations" },
+  { year: "2025", org: "Bzichimem", role: "Founder and CEO: measured power flexibility for AI data centers" },
+]
+
+const LINKEDIN = "https://www.linkedin.com/in/jehuda-spielman-1a7094333"
+
+const orgJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Bzichimem",
+  url: "https://www.bzichimem.com",
+  email: "contact@bzichimem.com",
+  founder: {
+    "@type": "Person",
+    name: "Jehuda (Eyal) Spielman",
+    jobTitle: "Founder and CEO",
+    sameAs: [LINKEDIN],
+  },
+}
+
 const steps = [
   {
     n: "01 · INPUTS",
@@ -65,6 +88,9 @@ export default function Page() {
             </a>
             <a className="nav-link" href="#pilot">
               Pilot scope
+            </a>
+            <a className="nav-link" href="#founder">
+              Founder
             </a>
             <a className="btn-nav" href="#contact">
               Discuss a Pilot
@@ -247,6 +273,84 @@ export default function Page() {
           </div>
         </section>
 
+        <section id="founder" className="section">
+          <div className="container founder-grid">
+            <aside className="founder-card reveal">
+              <svg className="founder-scope" viewBox="0 0 96 96" aria-hidden="true">
+                <defs>
+                  <linearGradient id="sweep-fill" gradientUnits="userSpaceOnUse" x1="12" y1="20" x2="48" y2="8">
+                    <stop offset="0" stopColor="#00ff88" stopOpacity="0" />
+                    <stop offset="1" stopColor="#00ff88" stopOpacity="0.32" />
+                  </linearGradient>
+                </defs>
+                <circle className="ring" cx="48" cy="48" r="46" />
+                <circle className="ring" cx="48" cy="48" r="31" />
+                <path className="ring" d="M48 2v92M2 48h92" />
+                <g className="sweep">
+                  <path d="M48 48 L12.76 18.43 A46 46 0 0 1 48 2 Z" fill="url(#sweep-fill)" />
+                  <path className="sweep-line" d="M48 48V2" />
+                </g>
+                <circle className="blip" cx="70" cy="28" r="2.2" />
+                <circle className="blip blip-2" cx="24" cy="66" r="1.8" />
+                <circle className="hub" cx="48" cy="48" r="19" />
+                <text x="48" y="53.5" textAnchor="middle">
+                  JS
+                </text>
+              </svg>
+              <div>
+                <h3 className="founder-name">Jehuda (Eyal) Spielman</h3>
+                <p className="founder-role">Founder and CEO, Bzichimem</p>
+                <p className="founder-meta">Tel Aviv, Israel</p>
+              </div>
+              <ul className="founder-tags">
+                <li>Phased arrays (AESA)</li>
+                <li>GPU simulation</li>
+                <li>C++ · CUDA · Python</li>
+                <li>Signal analysis</li>
+                <li>AI/ML</li>
+              </ul>
+              <div className="founder-links">
+                <a href={LINKEDIN} target="_blank" rel="noopener noreferrer">
+                  LinkedIn <span aria-hidden="true">↗</span>
+                </a>
+                <a href="mailto:contact@bzichimem.com">Email</a>
+              </div>
+            </aside>
+            <div className="founder-copy reveal">
+              <p className="eyebrow">Founder</p>
+              <h2>From radar arrays to AI data centers</h2>
+              <p className="lead">
+                Jehuda (Eyal) Spielman founded Bzichimem in 2025, after 15 years at ELTA Systems as a radar and
+                phased-array (AESA) systems engineer.
+              </p>
+              <p>
+                At ELTA he built GPU-accelerated physical models and simulations of radar systems in C++, CUDA, MATLAB
+                and Python. His work there spanned target detection, classification and signal analysis, and AI/ML
+                applications in radar.
+              </p>
+              <p>
+                Before ELTA he was a research assistant in optics at Bar-Ilan University, designing optical setups and
+                simulation models for beam shaping, interferometry and wavefront control. He started as an acoustic
+                engineer at Silentium, modeling how sound and vibration travel through complex structures.
+              </p>
+              <p>
+                At Bzichimem he applies twenty years of physical modeling to a new system: the power draw of AI
+                computing. He measures how far and how fast GPU power can drop while services hold their targets, and
+                turns those measurements into site models for data center developers and energy partners.
+              </p>
+              <ol className="timeline">
+                {career.map((c, i) => (
+                  <li key={c.year} style={{ "--i": i } as CSSProperties}>
+                    <span className="tl-year">{c.year}</span>
+                    <span className="tl-org">{c.org}</span>
+                    <span className="tl-role">{c.role}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </section>
+
         <section id="contact" className="section">
           <div className="container contact-grid">
             <div className="reveal">
@@ -272,6 +376,7 @@ export default function Page() {
         </div>
       </footer>
       <Reveal />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
     </>
   )
 }

@@ -664,6 +664,216 @@ h2 {
   animation: bz-flow 3.2s linear infinite;
 }
 
+/* founder */
+.founder-grid {
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  gap: 40px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .founder-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+.founder-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+.founder-scope {
+  width: 104px;
+  height: 104px;
+}
+.founder-scope .ring {
+  fill: none;
+  stroke: var(--line-2);
+  stroke-width: 1;
+}
+.founder-scope .sweep {
+  transform-origin: 48px 48px;
+  animation: bz-spin 4.5s linear infinite;
+}
+.founder-scope .sweep-line {
+  stroke: var(--green);
+  stroke-width: 1.4;
+}
+.founder-scope .blip {
+  fill: var(--green);
+  animation: bz-pulse 2.2s ease-in-out infinite;
+}
+.founder-scope .blip-2 {
+  animation-delay: 1.1s;
+}
+.founder-scope .hub {
+  fill: var(--bg-card);
+  stroke: rgba(0, 255, 136, 0.45);
+}
+.founder-scope text {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--green);
+  letter-spacing: 0.04em;
+}
+.founder-name {
+  font-size: 20px;
+  font-weight: 500;
+}
+.founder-role {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--green);
+  margin-top: 4px;
+}
+.founder-meta {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.founder-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.founder-tags li {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+.founder-links {
+  display: flex;
+  gap: 18px;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.founder-links a {
+  color: var(--green);
+}
+.founder-links a:hover {
+  text-decoration: underline;
+}
+.founder-copy p {
+  color: var(--text-muted);
+  font-size: 16px;
+}
+.founder-copy p + p {
+  margin-top: 14px;
+}
+.founder-copy .lead {
+  color: var(--text);
+  font-size: 17px;
+}
+.founder-copy .eyebrow {
+  margin-bottom: 10px;
+}
+.timeline {
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  position: relative;
+}
+.timeline::before,
+.timeline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 7px;
+  height: 2px;
+  background: var(--line-2);
+}
+.timeline::after {
+  background: linear-gradient(90deg, var(--blue), var(--green));
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1.6s ease 0.2s;
+}
+.in .timeline::after {
+  transform: scaleX(1);
+}
+.timeline li {
+  position: relative;
+  padding-top: 28px;
+  display: grid;
+  gap: 2px;
+}
+.timeline li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--line-2);
+  z-index: 1;
+  transition: border-color 0.4s, box-shadow 0.4s;
+  transition-delay: calc(var(--i) * 0.4s + 0.2s);
+}
+.in .timeline li::before {
+  border-color: var(--green);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.45);
+}
+.tl-year {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--green);
+}
+.tl-org {
+  font-size: 15px;
+  color: var(--text);
+}
+.tl-role {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+@media (max-width: 700px) {
+  .timeline {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .timeline::before,
+  .timeline::after {
+    left: 7px;
+    right: auto;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    height: auto;
+  }
+  .timeline::after {
+    background: linear-gradient(180deg, var(--blue), var(--green));
+    transform-origin: top;
+    transform: scaleY(0);
+  }
+  .in .timeline::after {
+    transform: scaleY(1);
+  }
+  .timeline li {
+    padding: 0 0 0 30px;
+  }
+  .timeline li::before {
+    top: 2px;
+  }
+}
+
 /* contact */
 .contact-grid {
   display: grid;
@@ -848,6 +1058,11 @@ footer {
   }
   50% {
     opacity: 1;
+  }
+}
+@keyframes bz-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 @keyframes bz-line {
